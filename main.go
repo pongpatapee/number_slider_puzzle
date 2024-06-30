@@ -47,7 +47,7 @@ func generateBorder(length int) string {
 | 7 | 8 | 9 |
 +-----------+
 */
-func printBoard(board Board) {
+func printBoard(board Board, numMoves int) {
 	boardStr := ""
 	row := ""
 
@@ -64,11 +64,12 @@ func printBoard(board Board) {
 	fmt.Print("\033[H\033[2J")
 	fmt.Println("Press ESC or q to quit")
 	fmt.Print(boardStr)
+	fmt.Printf("Num Moves: %d\n", numMoves)
 }
 
 func randomizeBoard(board Board) {
 	dirs := []string{"U", "D", "L", "R"}
-	for range 100 {
+	for range 1000 {
 		// Guarantee that a solved position is possible
 		move(board, dirs[rand.Intn(len(dirs))])
 	}
@@ -142,6 +143,8 @@ func main() {
 	board := createBoard(size)
 	solvedBoard := createBoard(size)
 	randomizeBoard(board)
+	numMoves := 0
+	// startTime := time.Now()
 
 	if err := keyboard.Open(); err != nil {
 		panic(err)
@@ -153,7 +156,7 @@ func main() {
 	for {
 
 		// Game loop
-		printBoard(board)
+		printBoard(board, numMoves)
 
 		char, key, err := keyboard.GetKey()
 		if err != nil {
@@ -174,9 +177,10 @@ func main() {
 		case 'd':
 			move(board, "R")
 		}
+		numMoves++
 
 		if isSolved(board, solvedBoard) {
-			printBoard(board)
+			printBoard(board, numMoves)
 			fmt.Printf("You solved %v x %v board!\n", size, size)
 			break
 		}
