@@ -67,11 +67,10 @@ func printBoard(board Board) {
 }
 
 func randomizeBoard(board Board) {
+	dirs := []string{"U", "D", "L", "R"}
 	for range 100 {
-		r1, c1 := rand.Intn(len(board)), rand.Intn(len(board))
-		r2, c2 := rand.Intn(len(board)), rand.Intn(len(board))
-
-		board[r1][c1], board[r2][c2] = board[r2][c2], board[r1][c1]
+		// Guarantee that a solved position is possible
+		move(board, dirs[rand.Intn(len(dirs))])
 	}
 }
 
@@ -135,7 +134,11 @@ func isSolved(board Board, solvedBoard Board) bool {
 }
 
 func main() {
-	size := 3
+	var size int
+
+	fmt.Println("Choose board size: ")
+	fmt.Scanln(&size)
+
 	board := createBoard(size)
 	solvedBoard := createBoard(size)
 	randomizeBoard(board)
